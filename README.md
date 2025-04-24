@@ -24,4 +24,4 @@ The contraction result represents the size of the maximal independent set of the
 
 We benchmark these networks with `sc = 31` on an A800 GPU using both standard algebra and tropical algebra. The results are available in `data/benchmark_julia_real_sc31.csv` and `data/benchmark_julia_tropical_sc31.csv`. The latter file also provides the exact results for the maximal independent set problem derived from the network contraction. In this case the time cost of tropical algebra is about three times larger that standard algebra.
 
-Specially, I tried to directly hack the `mul!` function with the tropical semiring kernel (see `jcode/benchmark_real_with_tropical.jl` and `data/benchmark_julia_real_with_tropical_sc31.csv`), in this case the time cost is about $20\%$ larger than the time cost of standard algebra.
+Notably, I also attempted to directly modify the `mul!` function using the tropical semiring kernel (refer to `jcode/benchmark_real_with_tropical.jl` and `data/benchmark_julia_real_with_tropical_sc31.csv`). In this scenario, the time cost is approximately 20% higher than that of standard algebra.
