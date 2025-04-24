@@ -7,7 +7,7 @@ id = collect(1:10)
 ccs = []
 
 for i in id
-    eins = readjson("../networks/eincode_$(i).json")
+    eins = readjson("../networks/sc31/eincode_$(i).json")
     push!(ccs, contraction_complexity(eins, uniformsize(eins, 2)))
 end
 
