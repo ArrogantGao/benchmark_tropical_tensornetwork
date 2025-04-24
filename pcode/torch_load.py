@@ -21,24 +21,23 @@ def contract(tree:dict, inputs):
     labels = torch.unique(torch.tensor(sum(tree["inputs"], start=[]) + tree["output"]))
     return contract_recur(tree['tree'], inputs)
 
-class CLI(object):
-    def gpu(self, repeat_times = 10, tensornetwork="../networks/sc31/eincode_1.json", deviceid:int=0):
-        device = 'cuda:%d'%deviceid
-        with open(tensornetwork, 'r') as f:
-            optcode = json.load(f)
+def gpu(repeat_times = 10, tensornetwork="../networks/sc31/eincode_1.json", deviceid:int=0):
+    device = 'cuda:%d'%deviceid
+    with open(tensornetwork, 'r') as f:
+        optcode = json.load(f)
 
-        tensors = [(0.5**0.4)*torch.ones((2,) * len(ix), dtype=torch.float32, device=device) for ix in optcode["inputs"]]
+    tensors = [(0.5**0.4)*torch.ones((2,) * len(ix), dtype=torch.float32, device=device) for ix in optcode["inputs"]]
+    torch.cuda.synchronize(device)
+    ta = time.time()
+    mintime = math.inf
+    for _ in range(repeat_times):
+        t0 = time.time()
+        res = contract(optcode, tensors)
         torch.cuda.synchronize(device)
-        ta = time.time()
-        mintime = math.inf
-        for _ in range(repeat_times):
-            t0 = time.time()
-            res = contract(optcode, tensors)
-            torch.cuda.synchronize(device)
-            t1 = time.time()
-            mintime = min(mintime, t1-t0)
-            print(res)
-        total = time.time() - ta
-        print("minimum time = \n", mintime)
+        t1 = time.time()
+        mintime = min(mintime, t1-t0)
+        print(res)
+    total = time.time() - ta
+    print("minimum time = \n", mintime)
 
 gpu()
