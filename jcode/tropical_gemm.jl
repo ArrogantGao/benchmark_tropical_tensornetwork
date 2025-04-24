@@ -28,7 +28,7 @@ for (TA, tA) in [(:CuVecOrMat, 'N'), (:CTranspose, 'T')]
                 elseif M * N == 0
                     return C
                 else
-                    @ccall $lib.$funcname(M::Cint, N::Cint, K::Cint, pointer(parent(A))::CuPtr{$CT}, pointer(parent(B))::CuPtr{$CT}, pointer(C)::CuPtr{$CT}, content(α)::$CT, content(β)::$CT, $tA::Cchar, $tB::Cchar, stream::CUDA.CUstream)::Cvoid
+                    @ccall $lib.$funcname(M::Cint, N::Cint, K::Cint, pointer(parent(A))::CuPtr{$CT}, pointer(parent(B))::CuPtr{$CT}, pointer(C)::CuPtr{$CT}, α::$CT, β::$CT, $tA::Cchar, $tB::Cchar, stream::CUDA.CUstream)::Cvoid
                 end
                 return C
             end
@@ -38,13 +38,15 @@ end
 
 const CuTropicalBlasTypes = Union{Float32, Float64}
 
+function _convert(x::Bool, ::Type{TF}) where TF <: CuTropicalBlasTypes
+    return x ? zero(TF) : TF(-Inf)
+end
+
 # overload the LinearAlgebra.mul!
 for TA in [:CuVecOrMat, :CTranspose]
     for TB in [:CuVecOrMat, :CTranspose]
         @eval function LinearAlgebra.mul!(C::CuVecOrMat{T}, A::$TA{T}, B::$TB{T}, α::Number, β::Number) where {T <: CuTropicalBlasTypes}
-            α = _convert(T, α)
-            β = _convert(T, β)
-            C = matmul!(C, A, B, α, β)
+            C = matmul!(C, A, B, _convert(α, T), _convert(β, T))
             return C
         end
     end
