@@ -28,7 +28,8 @@ function benchmark(id::Int)
     tensors = generate_tensors(graph)
 
     # warmup
-    code(tensors...)
+    res = code(tensors...)
+    @show id, Array(res)
 
     # 10 times runs for benchmark
     t = @elapsed begin

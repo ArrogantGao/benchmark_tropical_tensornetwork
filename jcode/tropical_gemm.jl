@@ -28,7 +28,7 @@ for (TA, tA) in [(:CuVecOrMat, 'N'), (:CTranspose, 'T')]
                 elseif M * N == 0
                     return C
                 else
-                    @ccall $lib.$funcname(M::Cint, N::Cint, K::Cint, pointer(parent(A))::CuPtr{$CT}, pointer(parent(B))::CuPtr{$CT}, pointer(C)::CuPtr{$CT}, α::$CT, β::$CT, $tA::Cchar, $tB::Cchar, stream::CUDA.CUstream)::Cvoid
+                    CUDA.@gcsafe_ccall $lib.$funcname(M::Cint, N::Cint, K::Cint, pointer(parent(A))::CuPtr{$CT}, pointer(parent(B))::CuPtr{$CT}, pointer(C)::CuPtr{$CT}, α::$CT, β::$CT, $tA::Cchar, $tB::Cchar, stream::CUDA.CUstream)::Cvoid
                 end
                 return C
             end
