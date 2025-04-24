@@ -19,9 +19,9 @@ function generate_tensors(g)
     return CuArray.(tensors)
 end
 
-function benchmark(id::Int)
-    graph = loadgraph("../networks/graph_$id.dot")
-    code = readjson("../networks/eincode_$id.json")
+function benchmark(id::Int, sc)
+    graph = loadgraph("../networks/sc$(sc)/graph_$id.dot")
+    code = readjson("../networks/sc$(sc)/eincode_$id.json")
 
     tensors = generate_tensors(graph)
 
@@ -38,15 +38,15 @@ function benchmark(id::Int)
     return t / 10
 end
 
-function main()
-    df = CSV.write("../data/benchmark_julia_real.csv", DataFrame(id = Int[], time = Float64[]))
+function main(sc)
+    df = CSV.write("../data/benchmark_julia_real_sc$(sc).csv", DataFrame(id = Int[], time = Float64[]))
 
     for id in 1:10
-        t = benchmark(id)
+        t = benchmark(id, sc)
         CSV.write(df, DataFrame(id = [id], time = [t]), append = true)
     end
 
     return df
 end
 
-main()
+main(31)

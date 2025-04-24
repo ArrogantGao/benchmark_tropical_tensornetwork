@@ -1,11 +1,8 @@
-using GenericTensorNetworks
 using OMEinsum
 using Graphs, GraphIO
 using CUDA, LinearAlgebra
 using CSV, DataFrames
-
-# loading this file will hack the LinearAlgebra.mul! function to use tropical gemm
-include("tropical_gemm.jl")
+using TropicalNumbers, CuTropicalGEMM
 
 function generate_tensors(g)
     tensors = []
@@ -18,7 +15,7 @@ function generate_tensors(g)
         push!(tensors, rand(Float32, 2))
     end
 
-    return CuArray.(tensors)
+    return Tropical.(CuArray.(tensors))
 end
 
 function benchmark(id::Int)
