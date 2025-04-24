@@ -2,6 +2,8 @@ using GenericTensorNetworks
 using OMEinsum
 using Graphs, GraphIO
 using CUDA, LinearAlgebra
+using CSV, DataFrames
+
 
 function generate_tensors(g)
     tensors = []
@@ -46,3 +48,5 @@ function main()
 
     return df
 end
+
+main()
