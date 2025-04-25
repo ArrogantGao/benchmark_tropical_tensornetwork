@@ -26,8 +26,19 @@ def gpu(repeat_times = 10, tensornetwork="../networks/sc31/eincode_1.json", devi
     with open(tensornetwork, 'r') as f:
         optcode = json.load(f)
 
-    tensors = [(0.5**0.4)*torch.ones((2,) * len(ix), dtype=torch.float32, device=device) for ix in optcode["inputs"]]
+    
+    tensors = []
+    for ix in optcode["inputs"]:
+        if len(ix) == 2:
+            t = torch.zeros(2, 2)
+            t[1, 1] = float('-inf')
+        else:
+            t = torch.zeros(2)
+            t[1] = float(1.0)
+        tensors.append(t)
+    
     print(tensors)
+
     torch.cuda.synchronize(device)
     ta = time.time()
     mintime = math.inf
