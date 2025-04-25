@@ -30,10 +30,10 @@ def gpu(repeat_times = 10, tensornetwork="../networks/sc31/eincode_1.json", devi
     tensors = []
     for ix in optcode["inputs"]:
         if len(ix) == 2:
-            t = torch.zeros(2, 2)
+            t = torch.zeros((2, 2), dtype=torch.float32, device=device)
             t[1, 1] = float('-inf')
         else:
-            t = torch.zeros(2)
+            t = torch.zeros((2), dtype=torch.float32, device=device)
             t[1] = float(1.0)
         tensors.append(t)
     
