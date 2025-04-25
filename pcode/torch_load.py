@@ -37,7 +37,7 @@ def gpu(repeat_times = 10, tensornetwork="../networks/sc31/eincode_1.json", devi
             t[1] = float(1.0)
         tensors.append(t)
     
-    print(tensors)
+    # print(tensors)
 
     torch.cuda.synchronize(device)
     ta = time.time()
